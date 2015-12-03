@@ -1,14 +1,56 @@
 <dataConfig>
   <dataSource type="JdbcDataSource" 
               driver="com.mysql.jdbc.Driver"
-              url="jdbc:mysql://localhost/simplewiki" 
+              url="jdbc:mysql://simplewiki.cx6omyfkhkjz.eu-central-1.rds.amazonaws.com/simplewiki" 
               user="root" 
-              password="root"
+              password="rootroot"
               batchSize="-1"/>
+              <script><![CDATA[
+                function namespace(row)        {
+                  var namespaceMap = {
+                    0: "Page",
+                    1: "Talk",
+                    2: "User",
+                    3: "User talk",
+                    4: "Project",
+                    5: "Project talk",
+                    6: "File",
+                    7: "File talk",
+                    8: "Mediawiki",
+                    9: "Mediawiki talk",
+                    10: "Template",
+                    11: "Template talk",
+                    12: "Help",
+                    13: "Help talk",
+                    14: "Category",
+                    15: "Category talk",
+                  };
+                  var namespaceId = row.get("namespace");
+                  var namespaceName = namespaceMap[namespaceId];
+                  row.put("namespace_s", namespaceName);
+                  return row;
+                }
+        ]]></script>
   <document>
     <entity name="page" 
-            query="SELECT page_id AS id, page_title AS title_t, CONVERT(rev_timestamp USING utf8) AS last_update, page_len AS length_i, rev_user_text AS author_s, rev_user_text AS author_t, CONVERT(old_text USING utf8) AS content_t FROM page, revision, text WHERE page.page_id = revision.rev_page AND revision.rev_text_id = text.old_id">
-            <field sourceColName="last_update" column="last_update_dt" dateTimeFormat="yyyyMMddHHmmss" locale="en" />
+            query="SELECT 
+    page_id AS id,
+    page_title AS title_t,
+    CAST(page_namespace AS UNSIGNED) AS namespace,
+    CAST(CONVERT( rev_timestamp USING utf8) AS UNSIGNED) AS last_update_l,
+    page_len AS length_i,
+    rev_user_text AS author_s,
+    rev_user_text AS author_t,
+    CONVERT( old_text USING utf8) AS content_t
+FROM
+    page,
+    revision,
+    text
+WHERE
+    page.page_id = revision.rev_page AND revision.rev_text_id = text.old_id"
+            transformer="RegexTransformer, DateFormatTransformer, script:namespace"
+            >
+            <field sourceColName="last_update_l" column="last_update_dt" dateTimeFormat="yyyyMMddhhmmss" locale="en" />
             <!--field sourceColName="last_update" column="last_update_dt" regex="(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})" replaceWith="\1-\2-\3T\4-\5-\6Z" /-->
     </entity>
   </document>

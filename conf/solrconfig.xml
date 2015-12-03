@@ -893,8 +893,14 @@
        <str name="facet">on</str>
        <str name="facet.missing">true</str>
        <str name="facet.field">author_s</str>
-       <str name="facet.field">last_update_dt</str>
+       <str name="facet.field">namespace_s</str>
        <str name="facet.mincount">1</str>
+       <str name="facet.range">last_update_dt</str>
+       <str name="f.last_update_dt.facet.range.start">NOW/YEAR-10YEARS</str>
+       <str name="f.last_update_dt.facet.range.end">NOW</str>
+       <str name="f.last_update_dt.facet.range.gap">+1YEAR</str>
+       <str name="f.last_update_dt.facet.range.other">before</str>
+       <str name="f.last_update_dt.facet.range.other">after</str>
 
        <!-- Highlighting defaults -->
        <str name="hl">on</str>

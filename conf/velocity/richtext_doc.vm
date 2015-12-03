@@ -8,12 +8,6 @@
 ## * supportedMimeTypes, AKA supportedtypes
 ## * mimeExtensionsMap, AKA extMap
 
-## Title
-#if($doc.getFieldValue('title'))
-  #set($title = $esc.html($doc.getFirstValue('title')))
-#else
-  #set($title = "["+$doc.getFieldValue('id')+"]")
-#end
 
 ## URL
 #if($doc.getFieldValue('url'))
@@ -21,7 +15,7 @@
 #elseif($doc.getFieldValue('resourcename'))
   #set($url = "file:///$doc.getFieldValue('resourcename')")
 #else
-  #set($url = "$doc.getFieldValue('id')")
+  #set($url = "https://simple.wikipedia.org/wiki/$doc.getFieldValue('title_t')")
 #end
 
 ## Sort out Mime-Type
@@ -53,11 +47,11 @@
 <div class="result-title">
   ## Icon
   ## Small file type icons from http://www.splitbrain.org/projects/file_icons (public domain)
-  <img src="#{url_root}/img/filetypes/${filetype}.png" align="center">
+  <!--img src="#{url_root}/img/filetypes/${filetype}.png" align="center"-->
 
   ## Title, hyperlinked
-  <a href="${url}" target="_blank">
-    <b>$title</b></a>
+  <a href="https://simple.wikipedia.org/wiki/$doc.getFirstValue('title_t')" target="_blank">
+    <b>$doc.getFirstValue('title_t')</b></a>
 
   ## Link for MLT / More Like This / Find Similar
   <span class="mlt">
@@ -70,7 +64,11 @@
 </div>
 
 <div>
-  Title: #field('title_t')
+  Type: #field('namespace_s')
+</div>
+
+<div class="result-body">
+  Content: #field('content_t')
 </div>
 
 <div>
@@ -78,27 +76,7 @@
 </div>
 
 <div>
-  Content: #field('content_t')
-</div>
-
-## Author
-#if($doc.getFieldValue('author'))
-  <div>
-    Author: #field('author')
-  </div>
-#end
-
-## Last_Modified Date
-#if($doc.getFieldValue('last_modified'))
-  <div>
-    last-modified:
-    #field('last_modified')
-  </div>
-#end
-
-## Main content of doc
-<div class="result-body">
-  #field('content')
+  Last update: #field('last_update_dt')
 </div>
 
 ## Display Similar Documents / MLT = More Like This
@@ -117,24 +95,26 @@
         #set($mltId = $mltHit.getFieldValue('id'))
         <li>
           <div>
-            <a href="#url_for_home?q=id:$mltId">
-              $mltId</a>
+            <a href="https://simple.wikipedia.org/wiki/$doc.getFirstValue('title_t')">
+              $mltHit.getFirstValue('title_t')</a>
           </div>
           <div>
             <span class="field-name">
-              Title:
+              Type:
             </span>
-            $mltHit.getFieldValue('title_t')
+            $mltHit.getFirstValue('namespace_s')
           </div>
           <div>
             <span class="field-name">
               Author:
             </span>
-            $mltHit.getFieldValue('author_t')
+            $mltHit.getFirstValue('author_t')
+          </div>
+          <div>
             <span class="field-name">
               Description:
             </span>
-            $mltHit.getFieldValue('content')
+            $mltHit.getFirstValue('content_t').substring(0, 500)
           </div>
         </li>
       #end    ## end for each mltHit in $mlt
