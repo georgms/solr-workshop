@@ -892,7 +892,6 @@
        <!-- Faceting defaults -->
        <str name="facet">on</str>
        <str name="facet.missing">true</str>
-       <str name="facet.field">author_s</str>
        <str name="facet.field">namespace_s</str>
        <str name="facet.mincount">1</str>
        <str name="facet.range">last_update_dt</str>

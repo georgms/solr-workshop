@@ -39,7 +39,6 @@
     CAST(page_namespace AS UNSIGNED) AS namespace,
     CAST(CONVERT( rev_timestamp USING utf8) AS UNSIGNED) AS last_update_l,
     page_len AS length_i,
-    rev_user_text AS author_s,
     rev_user_text AS author_t,
     CONVERT( old_text USING utf8) AS content_t
 FROM
