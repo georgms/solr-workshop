@@ -1,0 +1,15 @@
+<dataConfig>
+  <dataSource type="JdbcDataSource" 
+              driver="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost/simplewiki" 
+              user="root" 
+              password="root"
+              batchSize="-1"/>
+  <document>
+    <entity name="page" 
+            query="SELECT page_id AS id, page_title AS title_t, CONVERT(rev_timestamp USING utf8) AS last_update, page_len AS length_i, rev_user_text AS author_s, rev_user_text AS author_t, CONVERT(old_text USING utf8) AS content_t FROM page, revision, text WHERE page.page_id = revision.rev_page AND revision.rev_text_id = text.old_id">
+            <field sourceColName="last_update" column="last_update_dt" dateTimeFormat="yyyyMMddHHmmss" locale="en" />
+            <!--field sourceColName="last_update" column="last_update_dt" regex="(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})" replaceWith="\1-\2-\3T\4-\5-\6Z" /-->
+    </entity>
+  </document>
+</dataConfig>
